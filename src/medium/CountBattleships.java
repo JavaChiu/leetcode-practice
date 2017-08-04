@@ -3,56 +3,72 @@ package medium;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 
 public class CountBattleships {
-	// private class Point2D {
-	// int x;
-	// int y;
-	//
-	// Point2D(int x, int y) {
-	// this.x = x;
-	// this.y = y;
-	// }
-	// }
+    public int countBattleships(char[][] board) {
+        HashSet<Point> shipList = new HashSet<Point>();
 
-	public int countBattleships(char[][] board) {
-		HashMap<Point, Integer> shipHashMap = new HashMap<Point, Integer>();
+        int battleShips = 0;
 
-		int battleShips = 0;
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j] == '.')
+                    continue;
 
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board[i].length; j++) {
-				if (board[i][j] == '.')
-					continue;
+                Point tempPoint = new Point(i, j);
+                if (shipList.contains(tempPoint)) {
+                    continue;
+                } else {
+                    battleShips++;
+                    shipList.add(tempPoint);
 
-				Point tempPoint = new Point(i, j);
-				if (shipHashMap.containsKey(tempPoint)) {
-					continue;
-				} else {
-					shipHashMap.put(tempPoint, ++battleShips);
-					
-					for(int k=i;k<board.length;k++) {
-						if(board[i][j]=='.') continue;
-						else shipHashMap.put(new Point(i,j), battleShips);
-					}					
-					
-					for (j = j + 1; j < board[i].length; j++) {
-						if(board[i][j]=='.') continue;
-						else shipHashMap.put(new Point(i,j), battleShips);
-					}
-										
+                    for (int k = i+1; k < board.length; k++) {
+                        if (board[k][j] == '.')
+                            continue;
+                        else
+                            shipList.add(new Point(k, j));
+                    }
 
-				}
+                    for (j = j + 1; j < board[i].length; j++) {
+                        if (board[i][j] == '.')
+                            continue;
+                        else
+                            shipList.add(new Point(i, j));
+                    }
 
-			}
-		}
-		
-		return battleShips;
-	}
-	
-	public static void main(String[] args) {
-		CountBattleships countBattleships = new CountBattleships();
-		char[][] charArray = new char[][] {{'x','.','.','x'},{'.','.','.','x'},{'.','.','.','x'}};
-		System.out.println(countBattleships.countBattleships(charArray));
-	}
+                }
+
+            }
+        }
+
+        return battleShips;
+    }
+
+    /*
+     * online sample, only count if the X is the first one.
+     */
+//    public int countBattleships(char[][] board) {
+//        int numberOfShips = 0;
+//
+//        for (int i = 0; i < board.length; i++) {
+//            for (int j = 0; j < board[i].length; j++) {
+//                if (board[i][j] == '.') 
+//                    continue;
+//                if (i > 0 && board[i - 1][j] == 'X')
+//                    continue;
+//                if (j > 0 && board[i][j - 1] == 'X')
+//                    continue;
+//                numberOfShips++;
+//            }
+//        }
+//        return numberOfShips;
+//    }
+
+    public static void main(String[] args) {
+        CountBattleships countBattleships = new CountBattleships();
+        char[][] charArray = new char[][] { { 'X', '.', '.', 'X' }, { '.', '.', '.', 'X' }, { '.', '.', '.', 'X' } };
+        System.out.println(countBattleships.countBattleships(charArray));
+    }
 }
